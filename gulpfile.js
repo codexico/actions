@@ -132,3 +132,8 @@ gulp.task('watch', ['connect', 'serve'], function () {
     gulp.watch('app/images/**/*', ['images']);
     gulp.watch('bower.json', ['wiredep']);
 });
+
+gulp.task('test', function () {
+    return gulp.src('test/spec/test.js', {read: false})
+        .pipe($.mocha({reporter: 'nyan'}));
+});
