@@ -1,7 +1,17 @@
-(function (window, document, $, undefined) {
-  'use strict';
+'use strict';
+var  Actions = (function (window, document, $, undefined) {
 
-  var actions = JSON.parse(localStorage.getItem('actions')) || [];
+  var api = {};
+
+  var actionsList = JSON.parse(localStorage.getItem('actions')) || [];
+
+  // function logActions() {
+  //   console.log("actionsList.length = ", actionsList.length);
+  //   console.log("JSON.parse(localStorage.getItem('actions')).length = ", JSON.parse(localStorage.getItem('actions')).length);
+  //   for (var i = 0; i < actionsList.length; i++) {
+  //     console.log("actionsList[i] = ", actionsList[i].title);
+  //   }
+  // }
 
   // Returns a random integer between min (included) and max (excluded)
   // Using Math.round() will give you a non-uniform distribution!
@@ -10,50 +20,54 @@
   }
 
   function showAction() {
-    var action = actions[getRandomInt(0, actions.length)];
+    var action = actionsList[getRandomInt(0, actionsList.length)];
     $('.action').html(action.title);
   }
 
-  function addAction(title) {
-    var action = {
-      title: title,
-      date: new Date()
-    };
+  api.save = function (action) {
+    actionsList.push(action);
+    localStorage.setItem('actions', JSON.stringify(actionsList));
 
-    actions.push(action);
-  }
+    // logActions();
+    return api;
+  };
 
-  function saveAction(title) {
-    addAction(title);
+  api.getLast = function () {
+    return actionsList[actionsList.length -1];
+  };
 
-    localStorage.setItem('actions', JSON.stringify(actions));
-
-    console.log("JSON.parse(localStorage.getItem('actions')) = ", JSON.parse(localStorage.getItem('actions')));
-  }
-
-  function clearActions() {
+  api.deleteAll = function () {
     localStorage.clear();
-    actions = [];
+    actionsList = [];
+  };
+
+  function buildAction($form) {
+    var action = {};
+
+    action.title = $.trim($form.find('.input-title').val());
+    action.duration = $form.find('.input-duration').val();
+    action.date = new Date();
+
+    return action;
   }
 
-
-  $(function () {
+  api.init = function () {
 
     $(document).on ('submit', '.form-new-action', function (event) {
       event.preventDefault();
 
-      var title = $(this).find('.input-title').val();
+      var action = buildAction($(this));
 
-      if (title) {
-        saveAction(title);
+      if (action.title) {
+        api.save(action);
+        this.reset();
       }
 
-      this.reset();
     });
 
     $(document).on ('click', '.button-delete-all', function (event) {
       event.preventDefault();
-      clearActions();
+      api.deleteAll();
     });
 
     $(document).on ('click', '.button-action', function (event) {
@@ -61,8 +75,12 @@
       showAction();
     });
 
-  });
+    return api;
+  };
 
-
-
+  return api;
 }(window, document, jQuery));
+
+$(function () {
+  Actions.init();
+});

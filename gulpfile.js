@@ -128,12 +128,13 @@ gulp.task('watch', ['connect', 'serve'], function () {
     });
 
     gulp.watch('app/styles/**/*.scss', ['styles']);
-    gulp.watch('app/scripts/**/*.js', ['scripts']);
+    gulp.watch('app/scripts/**/*.js', ['test', 'scripts']);
     gulp.watch('app/images/**/*', ['images']);
     gulp.watch('bower.json', ['wiredep']);
 });
 
 gulp.task('test', function () {
-    return gulp.src('test/spec/test.js', {read: false})
-        .pipe($.mocha({reporter: 'nyan'}));
+  return gulp
+  .src('test/runner.html')
+  .pipe($.mochaPhantomjs({reporter: 'spec'}));
 });
