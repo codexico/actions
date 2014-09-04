@@ -23,6 +23,11 @@ gulp.task('scripts', function () {
         .pipe($.jshint.reporter(require('jshint-stylish')))
         .pipe($.size());
 });
+gulp.task('jshint', function() {
+  return gulp.src('app/scripts/**/*.js')
+    .pipe($.jshint())
+    .pipe($.jshint.reporter(require('jshint-stylish'), { verbose: true }));
+});
 
 gulp.task('html', ['styles', 'scripts'], function () {
     var jsFilter = $.filter('**/*.js');
@@ -133,7 +138,7 @@ gulp.task('watch', ['connect', 'serve'], function () {
     gulp.watch('bower.json', ['wiredep']);
 });
 
-gulp.task('test', function () {
+gulp.task('test', ['jshint'], function () {
   return gulp
   .src('test/runner.html')
   .pipe($.mochaPhantomjs({reporter: 'spec'}));

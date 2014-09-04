@@ -10,10 +10,12 @@ var  Actions = (function (window, document, $, undefined) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
-  function showAction() {
+  api.showAction = function () {
     var action = actionsList[getRandomInt(0, actionsList.length)];
-    $('.action').html(action.title);
-  }
+    $('.action-title').html(action.title);
+    $('.action-duration').html(action.duration);
+    $('.action-where').html(action.where);
+  };
 
   function renderWhereHTML() {
     for (var i = whereList.length - 1; i >= 0; i--) {
@@ -48,21 +50,20 @@ var  Actions = (function (window, document, $, undefined) {
     action.where = $.trim($form.find('.input-where').val()) || undefined;
 
     if (newWhere) {
-      api.saveWhere(newWhere);
       action.where = newWhere;
     }
 
     return action;
   }
 
-  api.saveWhere = function (where) {
+  api.saveWhere = function (action) {
     var id = 'id_' + (+new Date());
     var whereObj = {
       id: id,
-      name: where
+      name: action.where
     };
 
-    if (existWhere(where)) {
+    if (existWhere(action.where)) {
       return true;
     }
 
@@ -78,11 +79,17 @@ var  Actions = (function (window, document, $, undefined) {
     actionsList.push(action);
     localStorage.setItem('actions', JSON.stringify(actionsList));
 
+    api.saveWhere(action);
+
     return api;
   };
 
   api.getLast = function () {
     return actionsList[actionsList.length -1];
+  };
+
+  api.getLastWhere = function () {
+    return whereList[whereList.length -1];
   };
 
   api.deleteAll = function () {
@@ -111,7 +118,7 @@ var  Actions = (function (window, document, $, undefined) {
 
     $(document).on ('click', '.button-action', function (event) {
       event.preventDefault();
-      showAction();
+      api.showAction();
     });
 
     $(document).on ('keyup keydown blur', '.input-new-where', function () {
