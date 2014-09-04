@@ -31,9 +31,11 @@
           </div>
         </div>
 
-        <h1 class="action">
-
-        </h1>
+        <div class="action">
+          <h1 class="action-title"></h1>
+          <p class="action-duration"></p>
+          <p class="action-where"></p>
+        </div>
       </div>
 
       <form class="form-horizontal well form-new-action" role="form" id="form-new-action">
@@ -50,6 +52,18 @@
           <div class="col-sm-10">
             <input type="number" class="form-control input-lg input-duration input-integer" id="input-duration" name="input-duration" placeholder="0 - 4" min="0" max="4" pattern="\d" maxlength="1">
           </div>
+        </div> <!-- .form-group -->
+
+        <div class="form-group">
+          <label for="duration" class="col-sm-2 control-label">Where:</label>
+          <p class="col-sm-10">
+            <input type="text" class="form-control input-lg input-new-where" id="input-duration" name="input-new-where" placeholder="@new" maxlength="42">
+          </p>
+          <p class="col-sm-10">
+            <select class="form-control input-where" id="input-where">
+              <option value=""></option>
+            </select>
+          </p>
         </div> <!-- .form-group -->
 
         <div class="form-group">

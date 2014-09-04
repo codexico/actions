@@ -6,7 +6,8 @@
   var actionFull = {
     title: 'testFull',
     date: new Date(),
-    duration: 4
+    duration: 4,
+    where: 'house'
   };
   var actionMin = {
     title: 'testMin',
@@ -17,6 +18,7 @@
   describe('save action', function () {
     var actionsLength = 0;
     var savedAction = {};
+    var title = '';
 
     Actions.save(actionMin);
 
@@ -34,12 +36,12 @@
       assert(actionMin.title, JSON.parse(localStorage.getItem('actions'))[0].title);
     });
 
-    it('should have date', function () {
-
+    it('should show title', function () {
+      Actions.showAction();
+      title = $('.action-title').html();
+      assert(savedAction.title, title);
     });
-    it('should have duration', function () {
 
-    });
   });
 
 
@@ -89,6 +91,64 @@
       expect(actionsLength).to.be.equal(1);
     });
   });
+
+
+  describe('action with where', function () {
+    var actionsLength = 0;
+    var savedAction = {};
+    var savedWhere = {};
+
+    Actions.save(actionFull);
+
+    actionsLength = JSON.parse(localStorage.getItem('actions')).length;
+    savedAction = Actions.getLast();
+    savedWhere = Actions.getLastWhere();
+
+    it('should saveAction with where', function () {
+      assert(1, actionsLength);
+      assert(actionFull, savedAction);
+      expect(savedAction).to.deep.equal(actionFull);
+    });
+
+    it('should have where', function () {
+      expect(savedAction).to.have.a.property('where', 'house');
+    });
+
+    it('should save where', function () {
+      expect(savedWhere).to.have.a.property('name', 'house');
+      expect(savedWhere).to.have.a.property('id');
+    });
+  });
+
+
+
+  describe('action with where', function () {
+    var actionsLength = 0;
+    var savedAction = {};
+    var savedWhere = {};
+
+    Actions.save(actionFull);
+
+    actionsLength = JSON.parse(localStorage.getItem('actions')).length;
+    savedAction = Actions.getLast();
+    savedWhere = Actions.getLastWhere();
+
+    it('should saveAction with where', function () {
+      assert(1, actionsLength);
+      assert(actionFull, savedAction);
+      expect(savedAction).to.deep.equal(actionFull);
+    });
+
+    it('should have where', function () {
+      expect(savedAction).to.have.a.property('where', 'house');
+    });
+
+    it('should save where', function () {
+      expect(savedWhere).to.have.a.property('name', 'house');
+      expect(savedWhere).to.have.a.property('id');
+    });
+  });
+
 
 
 })();
