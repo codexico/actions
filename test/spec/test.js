@@ -151,4 +151,34 @@
 
 
 
+  describe('options', function () {
+
+    describe('show options', function () {
+
+      it('should show option duration', function () {
+        expect($('.option-duration').length).to.deep.equal(1);
+      });
+
+      it('should show option where', function () {
+
+      });
+
+    });
+
+    describe('use options', function () {
+
+      it('should filter options with duration', function () {
+
+      });
+
+      it('should filter options with where', function () {
+
+      });
+
+    });
+
+  });
+
+
+
 })();
