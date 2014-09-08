@@ -5,16 +5,54 @@ var  Actions = (function (window, document, $, undefined) {
 
   var actionsList = JSON.parse(localStorage.getItem('actions')) || [];
   var whereList = JSON.parse(localStorage.getItem('where')) || [];
+  var $els = {};
 
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
-  api.showAction = function () {
-    var action = actionsList[getRandomInt(0, actionsList.length)];
-    $('.action-title').html(action.title);
-    $('.action-duration').html(action.duration);
-    $('.action-where').html(action.where);
+  function getActionsByDuration(duration) {
+    var actions = [];
+
+    for (var i = actionsList.length - 1; i >= 0; i--) {
+      if (actionsList[i].duration === duration) {
+        actions.push(actionsList[i]);
+      }
+    }
+
+    return actions;
+  }
+
+  function getAction(options) {
+    var filteredActions = actionsList;
+    var random;
+
+    if (options.duration) {
+      filteredActions = getActionsByDuration(options.duration);
+    }
+
+    random = getRandomInt(0, filteredActions.length);
+    return filteredActions[random];
+  }
+
+  api.showAction = function (form) {
+    var action = {};
+    var $form = $(form);
+    var options = {};
+    options.duration = $form.find('.option-duration_input').val();
+
+    action = getAction(options);
+
+    if (!action) {
+      $('.action-title').html('not found');
+      return api;
+    }
+
+    $('.action-title').html(action.title || '');
+    $('.action-duration').html(action.duration || '');
+    $('.action-where').html(action.where || '');
+
+    return api;
   };
 
   function renderWhereHTML() {
@@ -97,37 +135,46 @@ var  Actions = (function (window, document, $, undefined) {
     actionsList = [];
   };
 
-  api.init = function () {
+  function onActionSubmit(form) {
+    var action = buildAction($(form));
 
-    $(document).on ('submit', '.form-new-action', function (event) {
-      event.preventDefault();
+    if (action.title) {
+      api.save(action);
+      form.reset();
+    }
+  }
 
-      var action = buildAction($(this));
-
-      if (action.title) {
-        api.save(action);
-        this.reset();
-      }
-
-    });
-
-    $(document).on ('click', '.button-delete-all', function (event) {
-      event.preventDefault();
-      api.deleteAll();
-    });
-
-    $(document).on ('click', '.button-action', function (event) {
-      event.preventDefault();
-      api.showAction();
-    });
-
-    $(document).on ('keyup keydown blur', '.input-new-where', function () {
+  function helperWhere() {
+    $els.body.on('keyup keydown blur', '.input-new-where', function () {
       if($.trim($(this).val())) {
         $('.input-where').val('').prop('disabled', true);
         return true;
       }
       $('.input-where').prop('disabled', false);
     });
+  }
+
+
+
+  api.init = function () {
+    $els.body = $('body');
+
+    $els.body.on('submit', '.form-new-action', function (event) {
+      event.preventDefault();
+      onActionSubmit(this);
+    });
+
+    $els.body.on('click', '.button-delete-all', function (event) {
+      event.preventDefault();
+      api.deleteAll();
+    });
+
+    $els.body.on('click', '.form-show-action', function (event) {
+      event.preventDefault();
+      api.showAction(this);
+    });
+
+    helperWhere();
 
     renderWhereHTML();
 

@@ -14,11 +14,9 @@
     date: new Date()
   };
 
-
   describe('save action', function () {
     var actionsLength = 0;
     var savedAction = {};
-    var title = '';
 
     Actions.save(actionMin);
 
@@ -34,12 +32,6 @@
     it('should have title', function () {
       expect(savedAction).to.have.a.property('title', actionMin.title);
       assert(actionMin.title, JSON.parse(localStorage.getItem('actions'))[0].title);
-    });
-
-    it('should show title', function () {
-      Actions.showAction();
-      title = $('.action-title').html();
-      assert(savedAction.title, title);
     });
 
   });
@@ -148,7 +140,6 @@
       expect(savedWhere).to.have.a.property('id');
     });
   });
-
 
 
 })();
