@@ -14,7 +14,6 @@
     date: new Date()
   };
 
-
   describe('save action', function () {
     var actionsLength = 0;
     var savedAction = {};
@@ -39,6 +38,8 @@
     it('should show title', function () {
       Actions.showAction();
       title = $('.action-title').html();
+      console.log("title = ", title);
+      console.log("savedAction.title = ", savedAction.title);
       assert(savedAction.title, title);
     });
 
@@ -148,37 +149,6 @@
       expect(savedWhere).to.have.a.property('id');
     });
   });
-
-
-
-  describe('options', function () {
-
-    describe('show options', function () {
-
-      it('should show option duration', function () {
-        expect($('.option-duration').length).to.deep.equal(1);
-      });
-
-      it('should show option where', function () {
-
-      });
-
-    });
-
-    describe('use options', function () {
-
-      it('should filter options with duration', function () {
-
-      });
-
-      it('should filter options with where', function () {
-
-      });
-
-    });
-
-  });
-
 
 
 })();
