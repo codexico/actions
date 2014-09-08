@@ -24,43 +24,76 @@
 
     <div class="container">
 
-      <div class="row jumbotron well">
-        <div class="form-group">
+
+<form class="form-horizontal well form-show-action" role="form" id="form-show-action">
+
+        <div class="jumbotron form-group">
           <div class="col-sm-offset-2 col-sm-10">
             <button type="button" class="btn btn-default btn-lg btn-block button-action">Action!</button>
           </div>
-        </div>
 
-        <div class="action">
-          <h1 class="action-title"></h1>
-          <p class="action-duration"></p>
-          <p class="action-where"></p>
-        </div>
-      </div>
+          <div class="action">
+            <h1 class="action-title"></h1>
+            <p class="action-duration"></p>
+            <p class="action-where"></p>
+          </div>
+        </div> <!-- .form-group -->
+
+
+
+      <div class="row well options">
+        <button type="button" class="btn btn-default btn-sm btn-block options-button">options</button>
+
+        <div class="form-group option option--duration">
+          <label for="option-duration" class="col-sm-2 control-label">
+            Duration in Pomodoros:
+          </label>
+          <p class="col-sm-10">
+            <select class="form-control option-duration_input" id="option-duration" name="option-duration">
+              <option value=""></option>
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </p>
+        </div> <!-- .option.option--duration -->
+
+      </div> <!-- .row.well.options -->
+
+</form> <!-- .form-show-action -->
+
 
       <form class="form-horizontal well form-new-action" role="form" id="form-new-action">
 
         <div class="form-group">
-          <label for="title" class="col-sm-2 control-label">New Item: *</label>
+          <label for="title" class="col-sm-2 control-label">
+            New Item: *
+          </label>
           <div class="col-sm-10">
             <input type="text" class="form-control input-lg input-title" id="input-title" name="input-title" placeholder="Title" maxlength="42" minlength="1">
           </div>
         </div> <!-- .form-group -->
 
         <div class="form-group">
-          <label for="duration" class="col-sm-2 control-label">Duration in Pomodoros:</label>
+          <label for="duration" class="col-sm-2 control-label">
+            Duration in Pomodoros:
+          </label>
           <div class="col-sm-10">
             <input type="number" class="form-control input-lg input-duration input-integer" id="input-duration" name="input-duration" placeholder="0 - 4" min="0" max="4" pattern="\d" maxlength="1">
           </div>
         </div> <!-- .form-group -->
 
         <div class="form-group">
-          <label for="duration" class="col-sm-2 control-label">Where:</label>
+          <label for="duration" class="col-sm-2 control-label">
+            Where:
+          </label>
           <p class="col-sm-10">
             <input type="text" class="form-control input-lg input-new-where" id="input-duration" name="input-new-where" placeholder="@new" maxlength="42">
           </p>
           <p class="col-sm-10">
-            <select class="form-control input-where" id="input-where">
+            <select class="form-control input-where" id="input-where" name="input-where">
               <option value=""></option>
             </select>
           </p>

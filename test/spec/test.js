@@ -17,7 +17,6 @@
   describe('save action', function () {
     var actionsLength = 0;
     var savedAction = {};
-    var title = '';
 
     Actions.save(actionMin);
 
@@ -33,14 +32,6 @@
     it('should have title', function () {
       expect(savedAction).to.have.a.property('title', actionMin.title);
       assert(actionMin.title, JSON.parse(localStorage.getItem('actions'))[0].title);
-    });
-
-    it('should show title', function () {
-      Actions.showAction();
-      title = $('.action-title').html();
-      console.log("title = ", title);
-      console.log("savedAction.title = ", savedAction.title);
-      assert(savedAction.title, title);
     });
 
   });
