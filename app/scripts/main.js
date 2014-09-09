@@ -3,24 +3,44 @@ var  Actions = (function (window, document, $, undefined) {
 
   var api = {};
 
-  var actionsList = JSON.parse(localStorage.getItem('actions')) || [];
-  var whereList = JSON.parse(localStorage.getItem('where')) || [];
+  var actionsList = [];
+  var whereList = [];
   var $els = {};
+
+  function getAllActions() {
+    return JSON.parse(localStorage.getItem('actions')) || [];
+  }
+
+  function getAllWhere() {
+    return JSON.parse(localStorage.getItem('where')) || [];
+  }
 
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
-  function getActionsByDuration(duration) {
-    var actions = [];
+  function filterActionsByDuration(actions, duration) {
+    var filteredActions = [];
 
-    for (var i = actionsList.length - 1; i >= 0; i--) {
-      if (actionsList[i].duration === duration) {
-        actions.push(actionsList[i]);
+    for (var i = actions.length - 1; i >= 0; i--) {
+      if (actions[i].duration === duration) {
+        filteredActions.push(actions[i]);
       }
     }
 
-    return actions;
+    return filteredActions;
+  }
+
+  function filterActionsByWhere(actions, where) {
+    var filteredActions = [];
+
+    for (var i = actions.length - 1; i >= 0; i--) {
+      if (actions[i].where === where) {
+        filteredActions.push(actions[i]);
+      }
+    }
+
+    return filteredActions;
   }
 
   api.getAction = function (options) {
@@ -28,7 +48,11 @@ var  Actions = (function (window, document, $, undefined) {
     var random;
 
     if (options.duration) {
-      filteredActions = getActionsByDuration(options.duration);
+      filteredActions = filterActionsByDuration(filteredActions, options.duration);
+    }
+
+    if (options.where) {
+      filteredActions = filterActionsByWhere(filteredActions, options.where);
     }
 
     random = getRandomInt(0, filteredActions.length);
@@ -40,6 +64,7 @@ var  Actions = (function (window, document, $, undefined) {
     var $form = $(form);
     var options = {};
     options.duration = $form.find('.option-duration_input').val();
+    options.where = $form.find('.option-where_input').val();
 
     action = api.getAction(options);
 
@@ -55,14 +80,21 @@ var  Actions = (function (window, document, $, undefined) {
     return api;
   };
 
+  function buildWhereHTML(whereObj) {
+    var option = '<option value="' + whereObj.name + '">' + whereObj.name + '</option>';
+    return option;
+  }
+
   function renderWhereHTML() {
+    var options = '';
     for (var i = whereList.length - 1; i >= 0; i--) {
-      appendWhereHTML(whereList[i]);
+      options += buildWhereHTML(whereList[i]);
     }
+    $('.input-where').append(options);
   }
 
   function appendWhereHTML(whereObj) {
-    var option = '<option value="' + whereObj.id + '">' + whereObj.name + '</option>';
+    var option = buildWhereHTML(whereObj);
     $('.input-where').append(option);
   }
 
@@ -144,24 +176,32 @@ var  Actions = (function (window, document, $, undefined) {
     }
   }
 
-  function helperWhere() {
-    $els.body.on('keyup keydown blur', '.input-new-where', function () {
-      if($.trim($(this).val())) {
-        $('.input-where').val('').prop('disabled', true);
+  function onChangeWhere() {
+    if($.trim($('.input-new-where').val())) {
+        $('.input-where-list').val('').prop('disabled', true);
         return true;
       }
-      $('.input-where').prop('disabled', false);
+      $('.input-where-list').prop('disabled', false);
+  }
+
+  function helperWhere() {
+    $els.body.on('keyup keydown blur', '.input-new-where', function () {
+      onChangeWhere();
     });
   }
 
 
 
   api.init = function () {
+    actionsList = getAllActions();
+    whereList = getAllWhere();
+
     $els.body = $('body');
 
     $els.body.on('submit', '.form-new-action', function (event) {
       event.preventDefault();
       onActionSubmit(this);
+      onChangeWhere();
     });
 
     $els.body.on('click', '.button-delete-all', function (event) {
