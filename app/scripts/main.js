@@ -23,7 +23,7 @@ var  Actions = (function (window, document, $, undefined) {
     return actions;
   }
 
-  function getAction(options) {
+  api.getAction = function (options) {
     var filteredActions = actionsList;
     var random;
 
@@ -33,7 +33,7 @@ var  Actions = (function (window, document, $, undefined) {
 
     random = getRandomInt(0, filteredActions.length);
     return filteredActions[random];
-  }
+  };
 
   api.showAction = function (form) {
     var action = {};
@@ -41,7 +41,7 @@ var  Actions = (function (window, document, $, undefined) {
     var options = {};
     options.duration = $form.find('.option-duration_input').val();
 
-    action = getAction(options);
+    action = api.getAction(options);
 
     if (!action) {
       $('.action-title').html('not found');
