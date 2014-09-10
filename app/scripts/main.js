@@ -207,7 +207,6 @@ var  Actions = (function (window, document, $, undefined) {
   };
 
 
-
   api.savePeople = function (action) {
     var id = 'id_' + (+new Date());
     var peopleObj = {
