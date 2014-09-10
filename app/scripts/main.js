@@ -162,6 +162,10 @@ var  Actions = (function (window, document, $, undefined) {
     return whereList[whereList.length -1];
   };
 
+  api.getLastPeople = function () {
+    return false;
+  };
+
   api.deleteAll = function () {
     localStorage.clear();
     actionsList = [];

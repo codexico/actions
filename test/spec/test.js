@@ -7,7 +7,8 @@
     title: 'testFull',
     date: new Date(),
     duration: 4,
-    where: 'house'
+    where: 'house',
+    people: 'friend'
   };
   var actionMin = {
     title: 'testMin',
@@ -127,6 +128,42 @@
       expect(filteredAction).to.have.a.property('title', 'testFull');
     });
 
+  });
+
+
+
+  describe('action with people', function () {
+    var actionsLength = 0;
+    var savedAction = {};
+    var savedPeople = {};
+    var filteredAction = {};
+
+    Actions.save(actionFull);
+
+    actionsLength = JSON.parse(localStorage.getItem('actions')).length;
+    savedAction = Actions.getLast();
+    savedPeople = Actions.getLastPeople();
+    filteredAction = Actions.getAction({people: 'friend'});
+
+    it('should saveAction with people', function () {
+      assert(1, actionsLength);
+      assert(actionFull, savedAction);
+      expect(savedAction).to.deep.equal(actionFull);
+    });
+
+    it('should have people', function () {
+      expect(savedAction).to.have.a.property('people', 'friend');
+    });
+
+    it('should save people', function () {
+      expect(savedPeople).to.have.a.property('name', 'house');
+      expect(savedPeople).to.have.a.property('id');
+    });
+
+    it('should filter people', function () {
+      expect(filteredAction).to.have.a.property('people', 'friend');
+      expect(filteredAction).to.have.a.property('title', 'testFull');
+    });
 
   });
 
