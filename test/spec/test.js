@@ -130,8 +130,6 @@
 
   });
 
-
-
   describe('action with people', function () {
     var actionsLength = 0;
     var savedAction = {};
@@ -156,7 +154,7 @@
     });
 
     it('should save people', function () {
-      expect(savedPeople).to.have.a.property('name', 'house');
+      expect(savedPeople).to.have.a.property('name', 'friend');
       expect(savedPeople).to.have.a.property('id');
     });
 

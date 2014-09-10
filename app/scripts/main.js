@@ -5,6 +5,7 @@ var  Actions = (function (window, document, $, undefined) {
 
   var actionsList = [];
   var whereList = [];
+  var peopleList = [];
   var $els = {};
 
   function getAllActions() {
@@ -13,6 +14,10 @@ var  Actions = (function (window, document, $, undefined) {
 
   function getAllWhere() {
     return JSON.parse(localStorage.getItem('where')) || [];
+  }
+
+  function getAllPeople() {
+    return JSON.parse(localStorage.getItem('people')) || [];
   }
 
   function getRandomInt(min, max) {
@@ -43,6 +48,18 @@ var  Actions = (function (window, document, $, undefined) {
     return filteredActions;
   }
 
+  function filterActionsByPeople(actions, people) {
+    var filteredActions = [];
+
+    for (var i = actions.length - 1; i >= 0; i--) {
+      if (actions[i].people === people) {
+        filteredActions.push(actions[i]);
+      }
+    }
+
+    return filteredActions;
+  }
+
   api.getAction = function (options) {
     var filteredActions = actionsList;
     var random;
@@ -55,6 +72,10 @@ var  Actions = (function (window, document, $, undefined) {
       filteredActions = filterActionsByWhere(filteredActions, options.where);
     }
 
+    if (options.people) {
+      filteredActions = filterActionsByPeople(filteredActions, options.people);
+    }
+
     random = getRandomInt(0, filteredActions.length);
     return filteredActions[random];
   };
@@ -65,6 +86,7 @@ var  Actions = (function (window, document, $, undefined) {
     var options = {};
     options.duration = $form.find('.option-duration_input').val();
     options.where = $form.find('.option-where_input').val();
+    options.people = $form.find('.option-people_input').val();
 
     action = api.getAction(options);
 
@@ -76,6 +98,7 @@ var  Actions = (function (window, document, $, undefined) {
     $('.action-title').html(action.title || '');
     $('.action-duration').html(action.duration || '');
     $('.action-where').html(action.where || '');
+    $('.action-people').html(action.people || '');
 
     return api;
   };
@@ -107,8 +130,41 @@ var  Actions = (function (window, document, $, undefined) {
     return false;
   }
 
+
+
+  function buildPeopleHTML(peopleObj) {
+    var option = '<option value="' + peopleObj.name + '">' + peopleObj.name + '</option>';
+    return option;
+  }
+
+  function renderPeopleHTML() {
+    var options = '';
+    for (var i = peopleList.length - 1; i >= 0; i--) {
+      options += buildPeopleHTML(peopleList[i]);
+    }
+    $('.input-people').append(options);
+  }
+
+  function appendPeopleHTML(peopleObj) {
+    var option = buildPeopleHTML(peopleObj);
+    $('.input-people').append(option);
+  }
+
+  function existPeople(people) {
+    for (var i = peopleList.length - 1; i >= 0; i--) {
+      if (peopleList[i].name === people) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+
+
   function buildAction($form) {
     var newWhere = $.trim($form.find('.input-new-where').val());
+    var newPeople = $.trim($form.find('.input-new-people').val());
     var action = {};
 
     // required data
@@ -118,9 +174,14 @@ var  Actions = (function (window, document, $, undefined) {
     // extra data
     action.duration = $.trim($form.find('.input-duration').val()) || undefined;
     action.where = $.trim($form.find('.input-where').val()) || undefined;
+    action.people = $.trim($form.find('.input-people').val()) || undefined;
 
     if (newWhere) {
       action.where = newWhere;
+    }
+
+    if (newPeople) {
+      action.people = newPeople;
     }
 
     return action;
@@ -145,11 +206,34 @@ var  Actions = (function (window, document, $, undefined) {
     return api;
   };
 
+
+
+  api.savePeople = function (action) {
+    var id = 'id_' + (+new Date());
+    var peopleObj = {
+      id: id,
+      name: action.people
+    };
+
+    if (existPeople(action.people)) {
+      return true;
+    }
+
+    peopleList.push(peopleObj);
+    localStorage.setItem('people', JSON.stringify(peopleList));
+
+    appendPeopleHTML(peopleObj);
+
+    return api;
+  };
+
+
   api.save = function (action) {
     actionsList.push(action);
     localStorage.setItem('actions', JSON.stringify(actionsList));
 
     api.saveWhere(action);
+    api.savePeople(action);
 
     return api;
   };
@@ -163,7 +247,7 @@ var  Actions = (function (window, document, $, undefined) {
   };
 
   api.getLastPeople = function () {
-    return false;
+    return peopleList[peopleList.length -1];
   };
 
   api.deleteAll = function () {
@@ -195,10 +279,26 @@ var  Actions = (function (window, document, $, undefined) {
   }
 
 
+  function onChangePeople() {
+    if($.trim($('.input-new-people').val())) {
+        $('.input-people-list').val('').prop('disabled', true);
+        return true;
+      }
+      $('.input-people-list').prop('disabled', false);
+  }
+
+  function helperPeople() {
+    $els.body.on('keyup keydown blur', '.input-new-people', function () {
+      onChangePeople();
+    });
+  }
+
+
 
   api.init = function () {
     actionsList = getAllActions();
     whereList = getAllWhere();
+    peopleList = getAllPeople();
 
     $els.body = $('body');
 
@@ -206,6 +306,7 @@ var  Actions = (function (window, document, $, undefined) {
       event.preventDefault();
       onActionSubmit(this);
       onChangeWhere();
+      onChangePeople();
     });
 
     $els.body.on('click', '.button-delete-all', function (event) {
@@ -221,6 +322,10 @@ var  Actions = (function (window, document, $, undefined) {
     helperWhere();
 
     renderWhereHTML();
+
+    helperPeople();
+
+    renderPeopleHTML();
 
     $('input:first').focus();
 
