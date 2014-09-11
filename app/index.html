@@ -44,6 +44,24 @@
       <div class="row well options">
         <button type="button" class="btn btn-default btn-sm btn-block options-button">options</button>
 
+        <div class="form-group option option--mood">
+          <label for="option-mood" class="col-sm-2 control-label">
+            Mood:
+          </label>
+          <p class="col-sm-10">
+            <select class="form-control option-mood_input" id="option-mood" name="option-mood">
+              <option value=""></option>
+              <option value="happy">😃</option>
+              <option value="love">😘</option>
+              <option value="numb">😐</option>
+              <option value="sad">😞</option>
+              <option value="hungry">😋</option>
+              <option value="tired">😴</option>
+            </select>
+          </p>
+        </div> <!-- .option.option--mood -->
+
+
         <div class="form-group option option--duration">
           <label for="option-duration" class="col-sm-2 control-label">
             Duration in Pomodoros:
@@ -142,6 +160,48 @@
             </select>
           </p>
         </div> <!-- .form-group -->
+
+
+
+
+        <div class="form-group">
+          <p class="col-sm-2">
+            Mood:
+          </p>
+          <div class="col-sm-10">
+          <div class="row text-center">
+            <label for="input-mood-happy" class="btn btn-primary btn-lg col-xs-2 col-sm-2 col-md-2 col-lg-2" title="happy">
+              <input type="radio" class="input-lg input-mood input-mood-happy hidden" id="input-mood-happy" name="input-mood" value="happy" >
+              <h2 class="mood">😃</h2>
+            </label>
+            <label for="input-mood-love" class="btn btn-primary btn-lg col-xs-2 col-sm-2 col-md-2 col-lg-2" title="love">
+              <input type="radio" class="input-lg input-mood input-mood-love hidden" id="input-mood-love" name="input-mood" value="love" >
+              <h2 class="mood">😘</h2>
+            </label>
+            <label for="input-mood-numb" class="btn btn-primary btn-lg col-xs-2 col-sm-2 col-md-2 col-lg-2" title="numb">
+              <input type="radio" class="input-lg input-mood input-mood-numb hidden" id="input-mood-numb" name="input-mood" value="numb" >
+              <h2 class="mood">😐</h2>
+            </label>
+            <label for="input-mood-sad" class="btn btn-primary btn-lg col-xs-2 col-sm-2 col-md-2 col-lg-2" title="sad">
+              <input type="radio" class="input-lg input-mood input-mood-sad hidden" id="input-mood-sad" name="input-mood" value="sad" >
+              <h2 class="mood">😞</h2>
+            </label>
+            <label for="input-mood-hungry" class="btn btn-primary btn-lg col-xs-2 col-sm-2 col-md-2 col-lg-2" title="hungry">
+              <input type="radio" class="input-lg input-mood input-mood-hungry hidden" id="input-mood-hungry" name="input-mood" value="hungry" >
+              <h2 class="mood">😋</h2>
+            </label>
+            <label for="input-mood-tired" class="btn btn-primary btn-lg col-xs-2 col-sm-2 col-md-2 col-lg-2" title="tired">
+              <input type="radio" class="input-lg input-mood input-mood-tired hidden" id="input-mood-tired" name="input-mood" value="tired" >
+              <h2 class="mood">😴</h2>
+            </label>
+          </div>
+          </div>
+        </div> <!-- .form-group -->
+
+
+
+
+
 
 
 

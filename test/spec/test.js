@@ -8,7 +8,8 @@
     date: new Date(),
     duration: 4,
     where: 'house',
-    people: 'friend'
+    people: 'friend',
+    mood: 'happy'
   };
   var actionMin = {
     title: 'testMin',
@@ -160,6 +161,37 @@
 
     it('should filter people', function () {
       expect(filteredAction).to.have.a.property('people', 'friend');
+      expect(filteredAction).to.have.a.property('title', 'testFull');
+    });
+
+  });
+
+
+
+  describe('action with mood', function () {
+    var actionsLength = 0;
+    var savedAction = {};
+    var filteredAction = {};
+
+    Actions.save(actionFull);
+
+    actionsLength = JSON.parse(localStorage.getItem('actions')).length;
+    savedAction = Actions.getLast();
+    filteredAction = Actions.getAction({mood: 'happy'});
+
+    it('should saveAction with mood', function () {
+      assert(1, actionsLength);
+      assert(actionFull, savedAction);
+      expect(savedAction).to.deep.equal(actionFull);
+    });
+
+    it('should have mood', function () {
+      console.log("savedAction = ", savedAction);
+      expect(savedAction).to.have.a.property('mood', 'happy');
+    });
+
+    it('should filter mood', function () {
+      expect(filteredAction).to.have.a.property('mood', 'happy');
       expect(filteredAction).to.have.a.property('title', 'testFull');
     });
 

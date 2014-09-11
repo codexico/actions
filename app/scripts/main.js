@@ -60,6 +60,18 @@ var  Actions = (function (window, document, $, undefined) {
     return filteredActions;
   }
 
+  function filterActionsByMood(actions, mood) {
+    var filteredActions = [];
+
+    for (var i = actions.length - 1; i >= 0; i--) {
+      if (actions[i].mood === mood) {
+        filteredActions.push(actions[i]);
+      }
+    }
+
+    return filteredActions;
+  }
+
   api.getAction = function (options) {
     var filteredActions = actionsList;
     var random;
@@ -76,6 +88,10 @@ var  Actions = (function (window, document, $, undefined) {
       filteredActions = filterActionsByPeople(filteredActions, options.people);
     }
 
+    if (options.mood) {
+      filteredActions = filterActionsByMood(filteredActions, options.mood);
+    }
+
     random = getRandomInt(0, filteredActions.length);
     return filteredActions[random];
   };
@@ -87,6 +103,7 @@ var  Actions = (function (window, document, $, undefined) {
     options.duration = $form.find('.option-duration_input').val();
     options.where = $form.find('.option-where_input').val();
     options.people = $form.find('.option-people_input').val();
+    options.mood = $form.find('.option-mood_input').val();
 
     action = api.getAction(options);
 
@@ -175,6 +192,7 @@ var  Actions = (function (window, document, $, undefined) {
     action.duration = $.trim($form.find('.input-duration').val()) || undefined;
     action.where = $.trim($form.find('.input-where').val()) || undefined;
     action.people = $.trim($form.find('.input-people').val()) || undefined;
+    action.mood = $.trim($form.find('.input-mood:checked').val()) || undefined;
 
     if (newWhere) {
       action.where = newWhere;
@@ -183,7 +201,7 @@ var  Actions = (function (window, document, $, undefined) {
     if (newPeople) {
       action.people = newPeople;
     }
-
+console.log("action = ", action);
     return action;
   }
 
@@ -256,7 +274,7 @@ var  Actions = (function (window, document, $, undefined) {
 
   function onActionSubmit(form) {
     var action = buildAction($(form));
-
+console.log("$(form).serialize() = ", $(form).serialize());
     if (action.title) {
       api.save(action);
       form.reset();
