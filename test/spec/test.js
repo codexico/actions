@@ -9,7 +9,8 @@
     duration: 4,
     where: 'house',
     people: 'friend',
-    mood: 'happy'
+    mood: 'happy',
+    time: 2
   };
   var actionMin = {
     title: 'testMin',
@@ -52,6 +53,7 @@
     filteredAction = Actions.getAction({duration: 4});
 
     it('should saveAction with duration', function () {
+      expect(actionFull).to.have.a.property('duration', 4);
       assert(1, actionsLength);
       assert(actionFull, savedAction);
       expect(savedAction).to.deep.equal(actionFull);
@@ -110,6 +112,7 @@
     filteredAction = Actions.getAction({where: 'house'});
 
     it('should saveAction with where', function () {
+      expect(actionFull).to.have.a.property('where', 'house');
       assert(1, actionsLength);
       assert(actionFull, savedAction);
       expect(savedAction).to.deep.equal(actionFull);
@@ -145,6 +148,7 @@
     filteredAction = Actions.getAction({people: 'friend'});
 
     it('should saveAction with people', function () {
+      expect(actionFull).to.have.a.property('people', 'friend');
       assert(1, actionsLength);
       assert(actionFull, savedAction);
       expect(savedAction).to.deep.equal(actionFull);
@@ -180,18 +184,49 @@
     filteredAction = Actions.getAction({mood: 'happy'});
 
     it('should saveAction with mood', function () {
+      expect(actionFull).to.have.a.property('mood', 'happy');
       assert(1, actionsLength);
       assert(actionFull, savedAction);
       expect(savedAction).to.deep.equal(actionFull);
     });
 
     it('should have mood', function () {
-      console.log("savedAction = ", savedAction);
       expect(savedAction).to.have.a.property('mood', 'happy');
     });
 
     it('should filter mood', function () {
       expect(filteredAction).to.have.a.property('mood', 'happy');
+      expect(filteredAction).to.have.a.property('title', 'testFull');
+    });
+
+  });
+
+
+
+  describe('action with time', function () {
+    var actionsLength = 0;
+    var savedAction = {};
+    var filteredAction = {};
+
+    Actions.save(actionFull);
+
+    actionsLength = JSON.parse(localStorage.getItem('actions')).length;
+    savedAction = Actions.getLast();
+    filteredAction = Actions.getAction({time: 2});
+
+    it('should saveAction with time', function () {
+      expect(actionFull).to.have.a.property('time', 2);
+      assert(1, actionsLength);
+      assert(actionFull, savedAction);
+      expect(savedAction).to.deep.equal(actionFull);
+    });
+
+    it('should have time', function () {
+      expect(savedAction).to.have.a.property('time', 2);
+    });
+
+    it('should filter time', function () {
+      expect(filteredAction).to.have.a.property('time', 2);
       expect(filteredAction).to.have.a.property('title', 'testFull');
     });
 
