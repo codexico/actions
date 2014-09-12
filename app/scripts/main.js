@@ -72,6 +72,18 @@ var  Actions = (function (window, document, $, undefined) {
     return filteredActions;
   }
 
+  function filterActionsByDaytime(actions, daytime) {
+    var filteredActions = [];
+
+    for (var i = actions.length - 1; i >= 0; i--) {
+      if (actions[i].daytime === daytime) {
+        filteredActions.push(actions[i]);
+      }
+    }
+
+    return filteredActions;
+  }
+
   api.getAction = function (options) {
     var filteredActions = actionsList;
     var random;
@@ -92,6 +104,10 @@ var  Actions = (function (window, document, $, undefined) {
       filteredActions = filterActionsByMood(filteredActions, options.mood);
     }
 
+    if (options.daytime) {
+      filteredActions = filterActionsByDaytime(filteredActions, options.daytime);
+    }
+
     random = getRandomInt(0, filteredActions.length);
     return filteredActions[random];
   };
@@ -104,6 +120,7 @@ var  Actions = (function (window, document, $, undefined) {
     options.where = $form.find('.option-where_input').val();
     options.people = $form.find('.option-people_input').val();
     options.mood = $form.find('.option-mood_input').val();
+    options.daytime = $form.find('.option-daytime_input').val();
 
     action = api.getAction(options);
 
@@ -193,6 +210,7 @@ var  Actions = (function (window, document, $, undefined) {
     action.where = $.trim($form.find('.input-where').val()) || undefined;
     action.people = $.trim($form.find('.input-people').val()) || undefined;
     action.mood = $.trim($form.find('.input-mood:checked').val()) || undefined;
+    action.daytime = $.trim($form.find('.input-daytime:checked').val()) || undefined;
 
     if (newWhere) {
       action.where = newWhere;
@@ -201,7 +219,7 @@ var  Actions = (function (window, document, $, undefined) {
     if (newPeople) {
       action.people = newPeople;
     }
-console.log("action = ", action);
+    // console.log("action = ", action);
     return action;
   }
 
@@ -274,7 +292,7 @@ console.log("action = ", action);
 
   function onActionSubmit(form) {
     var action = buildAction($(form));
-console.log("$(form).serialize() = ", $(form).serialize());
+    // console.log("$(form).serialize() = ", $(form).serialize());
     if (action.title) {
       api.save(action);
       form.reset();
