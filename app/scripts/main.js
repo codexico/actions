@@ -134,6 +134,8 @@ var  Actions = (function (window, document, $, undefined) {
     $('.action-where').html(action.where || '');
     $('.action-people').html(action.people || '');
 
+    $('.action').removeClass('hidden');
+
     return api;
   };
 
