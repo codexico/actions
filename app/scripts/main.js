@@ -4,9 +4,20 @@ var  Actions = (function (window, document, $, undefined) {
   var api = {};
 
   var actionsList = [];
+  var actionsDone = [];
   var whereList = [];
   var peopleList = [];
   var $els = {};
+  var id = 0;
+  var actionShowing = {};
+
+  function getId() {
+    id = (parseInt(localStorage.getItem('id'), 10) || 0) + 1;
+
+    localStorage.setItem('id', id);
+
+    return id;
+  }
 
   function getAllActions() {
     return JSON.parse(localStorage.getItem('actions')) || [];
@@ -109,6 +120,7 @@ var  Actions = (function (window, document, $, undefined) {
     }
 
     random = getRandomInt(0, filteredActions.length);
+
     return filteredActions[random];
   };
 
@@ -116,6 +128,7 @@ var  Actions = (function (window, document, $, undefined) {
     var action = {};
     var $form = $(form);
     var options = {};
+
     options.duration = $form.find('.option-duration_input').val();
     options.where = $form.find('.option-where_input').val();
     options.people = $form.find('.option-people_input').val();
@@ -129,10 +142,14 @@ var  Actions = (function (window, document, $, undefined) {
       return api;
     }
 
+    actionShowing = action;
+
     $('.action-title').html(action.title || '');
     $('.action-duration').html(action.duration || '');
     $('.action-where').html(action.where || '');
     $('.action-people').html(action.people || '');
+
+    $('.action').removeClass('hidden');
 
     return api;
   };
@@ -211,6 +228,7 @@ var  Actions = (function (window, document, $, undefined) {
     action.people = $.trim($form.find('.input-people').val()) || undefined;
     action.mood = $.trim($form.find('.input-mood:checked').val()) || undefined;
     action.daytime = $.trim($form.find('.input-daytime:checked').val()) || undefined;
+    action.id = getId();
 
     if (newWhere) {
       action.where = newWhere;
@@ -290,6 +308,23 @@ var  Actions = (function (window, document, $, undefined) {
     actionsList = [];
   };
 
+  api.actionDone = function () {
+    for (var i = actionsList.length - 1; i >= 0; i--) {
+      if (actionsList[i].id === actionShowing.id) {
+        actionsList.splice(i, 1);
+        localStorage.setItem('actions', JSON.stringify(actionsList));
+        break;
+      }
+    }
+
+    // update done
+    actionsDone.push(actionShowing);
+    localStorage.setItem('done', JSON.stringify(actionsDone));
+
+    return api;
+  };
+
+
   function onActionSubmit(form) {
     var action = buildAction($(form));
     // console.log("$(form).serialize() = ", $(form).serialize());
@@ -352,6 +387,11 @@ var  Actions = (function (window, document, $, undefined) {
     $els.body.on('click', '.form-show-action', function (event) {
       event.preventDefault();
       api.showAction(this);
+    });
+
+    $els.body.on('click', '.ui-done', function (event) {
+      event.preventDefault();
+      api.actionDone();
     });
 
     helperWhere();
