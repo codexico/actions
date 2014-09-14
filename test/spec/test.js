@@ -98,6 +98,39 @@
   });
 
 
+  describe('done action', function () {
+    var actionsLength = {};
+    var actionsDone =  [];
+    var actionsDoneLength = {};
+
+    if (localStorage.getItem('done')) {
+      actionsDone = JSON.parse(localStorage.getItem('done'));
+    } else {
+      localStorage.setItem('done', JSON.stringify(actionsDone));
+    }
+
+    actionsDoneLength.before = JSON.parse(localStorage.getItem('done')).length;
+    Actions.save(actionMin);
+    actionsLength.before = JSON.parse(localStorage.getItem('actions')).length;
+
+    Actions.showAction();
+    Actions.actionDone();
+
+    actionsDoneLength.after = JSON.parse(localStorage.getItem('done')).length;
+    actionsLength.after = JSON.parse(localStorage.getItem('actions')).length;
+
+    it('should remove action', function () {
+      expect(actionsLength.after).to.be.equal(actionsLength.before - 1);
+    });
+
+    it('should save action done', function () {
+      expect(actionsDoneLength.after).to.be.equal(actionsDoneLength.before + 1);
+    });
+
+  });
+
+
+
   describe('action with where', function () {
     var actionsLength = 0;
     var savedAction = {};

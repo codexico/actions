@@ -128,6 +128,7 @@ var  Actions = (function (window, document, $, undefined) {
     var action = {};
     var $form = $(form);
     var options = {};
+
     options.duration = $form.find('.option-duration_input').val();
     options.where = $form.find('.option-where_input').val();
     options.people = $form.find('.option-people_input').val();
