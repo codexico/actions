@@ -31,6 +31,10 @@ var  Actions = (function (window, document, $, undefined) {
     return JSON.parse(localStorage.getItem('people')) || [];
   }
 
+  function getAllDone() {
+    return JSON.parse(localStorage.getItem('done')) || [];
+  }
+
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
@@ -308,14 +312,22 @@ var  Actions = (function (window, document, $, undefined) {
     actionsList = [];
   };
 
-  api.actionDone = function () {
+  api.deleteAction = function (id) {
+    id = id || actionShowing.id;
+
     for (var i = actionsList.length - 1; i >= 0; i--) {
-      if (actionsList[i].id === actionShowing.id) {
+      if (actionsList[i].id === id) {
         actionsList.splice(i, 1);
         localStorage.setItem('actions', JSON.stringify(actionsList));
         break;
       }
     }
+
+    return api;
+  };
+
+  api.actionDone = function () {
+    api.deleteAction();
 
     // update done
     actionsDone.push(actionShowing);
@@ -369,6 +381,8 @@ var  Actions = (function (window, document, $, undefined) {
     actionsList = getAllActions();
     whereList = getAllWhere();
     peopleList = getAllPeople();
+    actionsDone = getAllDone();
+    id = parseInt(localStorage.getItem('id'), 10) || 0;
 
     $els.body = $('body');
 
@@ -392,6 +406,11 @@ var  Actions = (function (window, document, $, undefined) {
     $els.body.on('click', '.ui-done', function (event) {
       event.preventDefault();
       api.actionDone();
+    });
+
+    $els.body.on('click', '.ui-delete', function (event) {
+      event.preventDefault();
+      api.deleteAction();
     });
 
     helperWhere();

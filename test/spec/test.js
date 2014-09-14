@@ -130,6 +130,26 @@
   });
 
 
+  describe('delete action', function () {
+    var actionsLength = {};
+
+    Actions.save(actionMin);
+
+    Actions.showAction();
+
+    actionsLength.before = JSON.parse(localStorage.getItem('actions')).length;
+
+    Actions.deleteAction();
+
+    actionsLength.after = JSON.parse(localStorage.getItem('actions')).length;
+
+    it('should remove action', function () {
+      expect(actionsLength.after).to.be.equal(actionsLength.before - 1);
+    });
+
+  });
+
+
 
   describe('action with where', function () {
     var actionsLength = 0;
